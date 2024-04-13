@@ -2,4 +2,12 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="backgroundLogin">#DDFFFFFF</color>
+    <color name="inputStroke">#AA808080</color>
+
+    <color name="primColor">#FFF85866</color>
+    <color name="secColor">#FF8AE179</color>
+    <color name="primColorDark">#FFD24753</color>
+    <color name="secColorDark">#FF6AAF5C</color>
+
 </resources>

@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">atdApp</string>
+    <string name="title">Au Temps Donne</string>
+    <string name="login">connexion</string>
+    <string name="email">Email</string>
+    <string name="password">Mot de passe</string>
+
 </resources>
