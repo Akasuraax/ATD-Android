@@ -43,6 +43,7 @@
             android:text="@string/email"/>
 
         <EditText
+            android:id="@+id/emailLogin"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="18dp"
@@ -56,6 +57,7 @@
             android:text="@string/password"/>
 
         <EditText
+            android:id="@+id/passwordLogin"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="18dp"
@@ -63,6 +65,7 @@
             android:padding="8dp"/>
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/loginButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
