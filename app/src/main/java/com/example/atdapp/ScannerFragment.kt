@@ -10,8 +10,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import com.example.atdapp.databinding.FragmentScannerBinding
+import com.google.zxing.integration.android.IntentIntegrator
 import com.journeyapps.barcodescanner.CaptureManager
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
+import org.json.JSONException
+import org.json.JSONObject
 
 
 /**
@@ -20,71 +24,58 @@ import com.journeyapps.barcodescanner.DecoratedBarcodeView
  * create an instance of this fragment.
  */
 class ScannerFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private lateinit var capture: CaptureManager
-    private lateinit var barcodeScannerView:DecoratedBarcodeView
-    private lateinit var scanResultLauncher: ActivityResultLauncher<Intent>
+    private lateinit var binding: FragmentScannerBinding
+    private lateinit var qrScanIntegrator: IntentIntegrator
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        var scanResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val intent = result.data
-                val barcode = intent?.getStringExtra("SCAN_RESULT")
-                Toast.makeText(this.context, "Scanned: $barcode", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        launchScanner()
-    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_scanner,container,false)
-        barcodeScannerView = view.findViewById(R.id.zxing_barcode_scanner)
-        capture = CaptureManager(activity, barcodeScannerView)
-        capture.initializeFromIntent(activity?.intent, savedInstanceState)
-        capture.decode()
-        return view
+    ): View {
+        binding = FragmentScannerBinding.inflate(layoutInflater)
+        return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        capture.onResume()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setupScanner()
+
+        val scanButton = binding.fab
+            scanButton.setOnClickListener {
+                initiateScan()
+            }
     }
 
-    override fun onPause() {
-        super.onPause()
-        capture.onPause()
+    private fun initiateScan() {
+        qrScanIntegrator.initiateScan()
+    }
+    private fun setupScanner() {
+        qrScanIntegrator = IntentIntegrator.forSupportFragment(this)
+        qrScanIntegrator.setOrientationLocked(false)
+        qrScanIntegrator.setPrompt("Scannez le code en mode portrait")
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        capture.onDestroy()
-    }
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ScannerFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ScannerFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+        if (result != null) {
+            // If QRCode has no data.
+            if (result.contents == null) {
+                Toast.makeText(activity, "pas trouver", Toast.LENGTH_LONG).show()
+            } else {
+                try {
+                    binding.textResult.text = result.contents
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+
+                    // Data not in the expected format. So, whole object as toast message.
+                    Toast.makeText(activity, "erreur : ${result.contents}", Toast.LENGTH_LONG).show()
                 }
             }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
     }
 }
