@@ -30,6 +30,7 @@ class HomeActivity : AppCompatActivity() {
                 R.id.home -> replaceFragment(HomeFragment())
                 R.id.profile -> replaceFragment(ProfilFragment())
                 R.id.setting -> replaceFragment(SettingFragment())
+                R.id.scanner -> replaceFragment(ScannerFragment())
 
                 else -> {}
             }
