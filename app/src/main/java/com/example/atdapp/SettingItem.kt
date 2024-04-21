@@ -1,0 +1,1 @@
+data class SettingItem(val title: String, val action: () -> Unit)

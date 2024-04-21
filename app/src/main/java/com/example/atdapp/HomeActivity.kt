@@ -1,10 +1,13 @@
 package com.example.atdapp
 
+import SettingsAdapter
+import SettingsFragment
 import android.app.AlertDialog
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.nfc.NdefMessage
 import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.nfc.tech.Ndef
@@ -28,6 +31,13 @@ import java.io.IOException
 
 class HomeActivity : AppCompatActivity() {
 
+    companion object {
+        private const val TAG = "HomeActivity"
+        private const val NFC_ACTION = NfcAdapter.ACTION_NDEF_DISCOVERED
+        private const val AUTH_TOKEN_KEY = "auth_token"
+        private const val USER_ID_KEY = "userId"
+    }
+
     private lateinit var pendingIntent: PendingIntent
     private var nfcAdapter: NfcAdapter? = null
 
@@ -35,36 +45,42 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_home)
+        setupWindowInsets()
+
+        setupNfc()
+        setupBottomNavigation()
+    }
+
+    private fun setupWindowInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+    }
 
+    private fun setupNfc() {
         val intent = Intent(this, HomeActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         }
-        pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+        pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
+    }
 
-        replaceFragment(HomeFragment())
-        var menu = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-
+    private fun setupBottomNavigation() {
+        val menu = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         menu.setOnItemSelectedListener {
-
             when (it.itemId) {
                 R.id.home -> replaceFragment(HomeFragment())
                 R.id.profile -> replaceFragment(ProfilFragment())
-                R.id.setting -> replaceFragment(SettingFragment())
+                R.id.setting -> replaceFragment(SettingsFragment())
                 R.id.scanner -> replaceFragment(ScannerFragment())
                 R.id.nfc -> replaceFragment(NFCFragment())
-
                 else -> {}
             }
             true
         }
     }
-
 
     private fun replaceFragment(fragment: Fragment) {
         val fragmentManager = supportFragmentManager
@@ -75,6 +91,10 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        setupNfcForegroundDispatch()
+    }
+
+    private fun setupNfcForegroundDispatch() {
         val pendingIntent = PendingIntent.getActivity(
             this,
             0,
@@ -91,69 +111,80 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        Log.d("CHKI", "NEW NFC DETECTED")
+        handleNfcIntent(intent)
+    }
 
-        if (intent?.action == NfcAdapter.ACTION_NDEF_DISCOVERED) {
+    private fun handleNfcIntent(intent: Intent?) {
+        if (intent?.action == NFC_ACTION) {
             val tag = intent.getParcelableExtra<Tag>(NfcAdapter.EXTRA_TAG)
             val ndef = Ndef.get(tag)
             if (ndef != null) {
                 try {
-                    ndef.connect()
-                    val ndefMessage = ndef.ndefMessage
-                    if (ndefMessage != null) {
-                        var data =""
-
-                        val record = ndefMessage.records[0]
-
-                            val payload = record.payload
-                            data = String(payload, Charsets.UTF_8)
-
-                            val knownHeader = "en"
-
-                            if (data.startsWith(knownHeader)) {
-                                data = data.substring(knownHeader.length)
-                            }
-                        Toast.makeText(this,data,Toast.LENGTH_LONG).show()
-
-                        val sharedPreferences = getSharedPreferences("MySharedPreferences", Context.MODE_PRIVATE)
-                        val authToken = sharedPreferences.getString("auth_token", "")
-                        val userId = sharedPreferences.getString("userId", "")
-
-                        val params = JSONObject()
-                        params.put("id_volunteer", userId)
-                        params.put("id_beneficiary", data)
-                        Log.d("token",authToken.toString())
-                        val queue = Volley.newRequestQueue(this)
-                        val jsonObjectRequest = object : JsonObjectRequest(
-                            Method.POST, "${Constant.API_BASE_URL}/visit",
-                            params,
-                            { response ->
-                                Toast.makeText(this, "Merci pour votre visite ", Toast.LENGTH_LONG).show()
-                            },
-                            { error ->
-                                Toast.makeText(this, error.networkResponse.statusCode.toString(), Toast.LENGTH_LONG).show()
-                            }) {
-                            override fun getHeaders(): MutableMap<String, String> {
-                                val headers = HashMap<String, String>()
-                                headers["Authorization"] = "$authToken"
-                                return headers
-                            }
-                        }
-
-                        queue.add(jsonObjectRequest)
-
-
-                    }
+                    processNdefMessage(ndef)
                 } catch (e: IOException) {
-                    Log.e("NFC", "Error reading NFC tag", e)
+                    Log.e(TAG, "Error reading NFC tag", e)
                 } finally {
                     try {
                         ndef.close()
                     } catch (e: IOException) {
-                        Log.e("NFC", "Error closing NFC", e)
+                        Log.e(TAG, "Error closing NFC", e)
                     }
                 }
             }
         }
+    }
+
+    private fun processNdefMessage(ndef: Ndef) {
+        try {
+            ndef.connect()
+            val ndefMessage = ndef.ndefMessage
+            if (ndefMessage != null) {
+                val data = extractDataFromNdefMessage(ndefMessage)
+                Toast.makeText(this, data, Toast.LENGTH_LONG).show()
+                sendDataToServer(data)
+            }
+        } catch (e: IOException) {
+            Log.e(TAG, "Error processing NFC message", e)
+        }
+    }
+
+    private fun extractDataFromNdefMessage(ndefMessage: NdefMessage): String {
+        val record = ndefMessage.records[0]
+        val payload = record.payload
+        var data = String(payload, Charsets.UTF_8)
+        val knownHeader = "en"
+        if (data.startsWith(knownHeader)) {
+            data = data.substring(knownHeader.length)
+        }
+        return data
+    }
+
+    private fun sendDataToServer(data: String) {
+        val sharedPreferences = getSharedPreferences("MySharedPreferences", Context.MODE_PRIVATE)
+        val authToken = sharedPreferences.getString(AUTH_TOKEN_KEY, "")
+        val userId = sharedPreferences.getString(USER_ID_KEY, "")
+
+        val params = JSONObject()
+        params.put("id_volunteer", userId)
+        params.put("id_beneficiary", data)
+        Log.d(TAG, "Token: $authToken")
+
+        val queue = Volley.newRequestQueue(this)
+        val jsonObjectRequest = object : JsonObjectRequest(
+            Method.POST, "${Constant.API_BASE_URL}/visit",
+            params,
+            { response ->
+                Toast.makeText(this, "Merci pour votre visite ", Toast.LENGTH_LONG).show()
+            },
+            { error ->
+                Toast.makeText(this, error.networkResponse.statusCode.toString(), Toast.LENGTH_LONG).show()
+            }) {
+            override fun getHeaders(): MutableMap<String, String> {
+                val headers = HashMap<String, String>()
+                headers["Authorization"] = "$authToken"
+                return headers
+            }
+        }
+        queue.add(jsonObjectRequest)
     }
 }

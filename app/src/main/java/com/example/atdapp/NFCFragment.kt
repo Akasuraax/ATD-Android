@@ -15,7 +15,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 
-
 /**
  * A simple [Fragment] subclass.
  * Use the [NFCFragment.newInstance] factory method to
@@ -23,34 +22,48 @@ import android.widget.Toast
  */
 class NFCFragment : Fragment() {
 
+    companion object {
+        private const val TAG = "NFCFragment"
+        private const val NFC_NOT_SUPPORTED_MESSAGE = "NFC non pris en charge sur cet appareil."
+        private const val NFC_SUPPORTED_MESSAGE = "NFC pris en charge sur cet appareil. Configuration NFC en cours..."
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_n_f_c, container, false)
 
-        val adapter = NfcAdapter.getDefaultAdapter(requireContext())
-        if (adapter == null) {
-
-            Toast.makeText(requireContext(), "NFC non pris en charge sur cet appareil.", Toast.LENGTH_SHORT).show()
-            Log.d("NFCFragment", "NFC non pris en charge sur cet appareil.")
-
+        val nfcAdapter = NfcAdapter.getDefaultAdapter(requireContext())
+        if (nfcAdapter == null) {
+            showToastAndLog(NFC_NOT_SUPPORTED_MESSAGE)
         } else {
-
-            val pendingIntent = PendingIntent.getActivity(requireContext(), 0,
-                Intent(requireContext(), javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
-                PendingIntent.FLAG_IMMUTABLE)
-            val intentFilter = IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED)
-            val filters = arrayOf(intentFilter)
-
-            adapter.enableForegroundDispatch(requireActivity(), pendingIntent, filters, null)
-            Log.d("NFCFragment", "NFC pris en charge sur cet appareil. Configuration NFC en cours...")
-
+            setupNfc(nfcAdapter)
         }
 
         return view
     }
 
+    private fun setupNfc(nfcAdapter: NfcAdapter) {
+        val pendingIntent = createPendingIntent()
+        val intentFilter = IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED)
+        val filters = arrayOf(intentFilter)
+
+        nfcAdapter.enableForegroundDispatch(requireActivity(), pendingIntent, filters, null)
+        Log.d(TAG, NFC_SUPPORTED_MESSAGE)
+    }
+
+    private fun createPendingIntent(): PendingIntent {
+        return PendingIntent.getActivity(requireContext(), 0,
+            Intent(requireContext(), javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
+            PendingIntent.FLAG_IMMUTABLE)
+    }
+
+    private fun showToastAndLog(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        Log.d(TAG, message)
+    }
+
     override fun onPause() {
         super.onPause()
-        val adapter = NfcAdapter.getDefaultAdapter(requireContext())
-        adapter?.disableForegroundDispatch(requireActivity())
+        val nfcAdapter = NfcAdapter.getDefaultAdapter(requireContext())
+        nfcAdapter?.disableForegroundDispatch(requireActivity())
     }
 }
