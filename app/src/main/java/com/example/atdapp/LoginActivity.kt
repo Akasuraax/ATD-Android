@@ -1,8 +1,8 @@
 package com.example.atdapp
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.provider.SyncStateContract
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONObject
@@ -39,21 +41,33 @@ class LoginActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val i = Intent(this,HomeActivity::class.java)
-            startActivity(i)
+            val jsonParams = JSONObject()
+            jsonParams.put("email", email)
+            jsonParams.put("password", password)
+
 
             val queue = Volley.newRequestQueue(this)
-            val request = StringRequest(Request.Method.GET,
-                "${Constant.API_BASE_URL}/login",
-                { content ->
-                val global = JSONObject(content)
-                    Toast.makeText(applicationContext,global.toString(),Toast.LENGTH_LONG).show()
+            val jsonObjectRequest = JsonObjectRequest(
+                Request.Method.POST, "${Constant.API_BASE_URL}/logIn", jsonParams,
+                { response ->
+
+                    val token = response.getString("token")
+
+                    val sharedPreferences = getSharedPreferences("MySharedPreferences", Context.MODE_PRIVATE)
+                    val editor = sharedPreferences.edit()
+                    editor.putString("auth_token", token)
+                    editor.apply()
+
+                    val i = Intent(this,HomeActivity::class.java)
+                    startActivity(i)
                 },
                 { error ->
-                    Toast.makeText(applicationContext,error.message.toString(),Toast.LENGTH_LONG).show()
+                    if(error.networkResponse.statusCode == 422) {
+                        Toast.makeText(applicationContext,R.string.loginError,Toast.LENGTH_LONG).show()
+                    }
                 }
             )
-            queue.add(request)
+            queue.add(jsonObjectRequest)
         }
     }
 }

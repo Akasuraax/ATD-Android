@@ -20,7 +20,9 @@
             app:tint="@color/white"
             android:layout_gravity="center|bottom"
             android:layout_marginBottom="48dp"
-            android:scaleType="fitCenter" />
+            android:scaleType="fitCenter"
+            android:visibility="visible"
+            />
 
         <TextView
             android:id="@+id/textResult"
@@ -30,6 +32,39 @@
             android:gravity="center"
             android:textSize="18sp"
         />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="bottom"
+            android:paddingBottom="64dp"
+            android:paddingHorizontal="32dp">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/supp_button"
+            android:layout_width="140dp"
+            android:layout_height="48dp"
+            android:padding="8dp"
+            android:background="@drawable/delete_button"
+            android:layout_gravity="bottom"
+            android:visibility="gone"
+            android:textColor="@color/white"
+            android:text="@string/delete"
+        />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/newScan_button"
+            android:layout_width="140dp"
+            android:layout_height="48dp"
+            android:layout_gravity="bottom|end"
+            android:background="@drawable/new_scan"
+            android:padding="8dp"
+            android:text="@string/new_scan"
+            android:textColor="@color/white"
+            android:visibility="gone" />
+        </FrameLayout>
+
 </FrameLayout>
 
 </FrameLayout>

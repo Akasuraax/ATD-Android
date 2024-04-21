@@ -9,5 +9,9 @@
     <color name="secColor">#FF8AE179</color>
     <color name="primColorDark">#FFD24753</color>
     <color name="secColorDark">#FF6AAF5C</color>
+    <color name="red">#CA161D</color>
+    <color name="redDark">#83080D</color>
+
+
 
 </resources>
