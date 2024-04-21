@@ -4,6 +4,12 @@
     <item
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:title="@string/nfc"
+        android:icon="@drawable/baseline_nfc_24"
+        android:id="@+id/nfc"/>
+    <item
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:title="@string/scanner"
         android:icon="@drawable/baseline_qr_code_scanner_24"
         android:id="@+id/scanner"/>

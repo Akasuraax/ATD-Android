@@ -12,7 +12,9 @@
     <string name="loginError">email ou mot de passe incorrect !</string>
     <string name="delete">Supprimer</string>
     <string name="new_scan">Scan</string>
-
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="nfc">NFC</string>
 
 
 </resources>

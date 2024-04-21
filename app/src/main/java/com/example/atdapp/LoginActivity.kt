@@ -52,10 +52,14 @@ class LoginActivity : AppCompatActivity() {
                 { response ->
 
                     val token = response.getString("token")
+                    val userJson = JSONObject(response.getString("user"))
+                    val userId = userJson.getString("id")
 
                     val sharedPreferences = getSharedPreferences("MySharedPreferences", Context.MODE_PRIVATE)
                     val editor = sharedPreferences.edit()
                     editor.putString("auth_token", token)
+                    editor.putString("userId", userId)
+
                     editor.apply()
 
                     val i = Intent(this,HomeActivity::class.java)
