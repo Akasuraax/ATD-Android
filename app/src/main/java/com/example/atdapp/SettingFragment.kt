@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.atdapp.LoginActivity
@@ -26,8 +27,8 @@ class SettingsFragment : Fragment() {
 
         val settingsList = listOf(
             SettingItem("Action") {  },
+            SettingItem("Théme") { showNightModeDialog() }, // Ajoutez cette ligne
             SettingItem("Déconnexion") { logOut() },
-            // Ajoutez autant d'actions que nécessaire
         )
 
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
@@ -67,4 +68,27 @@ class SettingsFragment : Fragment() {
 
         builder.create().show()
     }
+
+    private fun showNightModeDialog() {
+        val modes = arrayOf("Système", "Clair", "Sombre")
+        val checkedItem = when (AppCompatDelegate.getDefaultNightMode()) {
+            AppCompatDelegate.MODE_NIGHT_YES -> 2
+            AppCompatDelegate.MODE_NIGHT_NO -> 1
+            else -> 0
+        }
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Choisissez un mode")
+            .setSingleChoiceItems(modes, checkedItem) { dialog, which ->
+                when (which) {
+                    0 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                    1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                    2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                }
+                dialog.dismiss()
+            }
+            .setNegativeButton("Annuler", null)
+            .show()
+    }
+
 }

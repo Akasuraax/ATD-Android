@@ -46,9 +46,13 @@ class HomeActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_home)
         setupWindowInsets()
+        replaceFragment(HomeFragment())
 
         setupNfc()
         setupBottomNavigation()
+
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        bottomNavigationView.selectedItemId = R.id.home
     }
 
     private fun setupWindowInsets() {
@@ -75,7 +79,6 @@ class HomeActivity : AppCompatActivity() {
                 R.id.profile -> replaceFragment(ProfilFragment())
                 R.id.setting -> replaceFragment(SettingsFragment())
                 R.id.scanner -> replaceFragment(ScannerFragment())
-                R.id.nfc -> replaceFragment(NFCFragment())
                 else -> {}
             }
             true
