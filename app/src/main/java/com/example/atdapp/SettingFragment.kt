@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.atdapp.LoginActivity
 import com.example.atdapp.databinding.FragmentSettingBinding
+import java.util.Locale
 
 class SettingsFragment : Fragment() {
 
@@ -26,7 +27,7 @@ class SettingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val settingsList = listOf(
-            SettingItem("Action") {  },
+            SettingItem("Langue") { showLanguageDialog() }, // Ajoutez cette ligne
             SettingItem("Théme") { showNightModeDialog() }, // Ajoutez cette ligne
             SettingItem("Déconnexion") { logOut() },
         )
@@ -90,5 +91,39 @@ class SettingsFragment : Fragment() {
             .setNegativeButton("Annuler", null)
             .show()
     }
+
+    private fun showLanguageDialog() {
+        val languages = arrayOf("Français", "English")
+        val checkedItem = when (Locale.getDefault().language) {
+            "fr" -> 0
+            "en" -> 1
+            else -> 0 // Default to French if no language is set
+        }
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Choisissez une langue")
+            .setSingleChoiceItems(languages, checkedItem) { dialog, which ->
+                when (which) {
+                    0 -> setLocale("fr")
+                    1 -> setLocale("en")
+                }
+                dialog.dismiss()
+            }
+            .setNegativeButton("Annuler", null)
+            .show()
+    }
+
+    private fun setLocale(languageCode: String) {
+        val locale = Locale(languageCode)
+        Locale.setDefault(locale)
+        val resources = resources
+        val config = resources.configuration
+        config.setLocale(locale)
+        resources.updateConfiguration(config, resources.displayMetrics)
+
+        // Redémarrer l'activité pour que les changements prennent effet
+        activity?.recreate()
+    }
+
 
 }
