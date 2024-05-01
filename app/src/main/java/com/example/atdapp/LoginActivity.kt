@@ -1,13 +1,21 @@
 package com.example.atdapp
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.android.volley.Request
@@ -66,12 +74,65 @@ class LoginActivity : AppCompatActivity() {
                     startActivity(i)
                 },
                 { error ->
-                    if(error.networkResponse.statusCode == 422) {
-                        Toast.makeText(applicationContext,R.string.loginError,Toast.LENGTH_LONG).show()
+                    if (error.networkResponse!= null) {
+                        val statusCode = error.networkResponse.statusCode
+                        if (statusCode == 422 || statusCode == 401) {
+                            showFailureLoginDialog()
+                        }
+                    } else {
+                        showFailureRequestDialog()
                     }
                 }
             )
             queue.add(jsonObjectRequest)
         }
     }
+
+    private fun showFailureLoginDialog() {
+        val builder = AlertDialog.Builder(this)
+        // Inflétez la vue de votre AlertDialog ici
+        val inflater = layoutInflater
+        val dialogView = inflater.inflate(R.layout.failure_dialog, null)
+        builder.setView(dialogView)
+
+        val failureDone = dialogView.findViewById<Button>(R.id.failureDone)
+        dialogView.findViewById<TextView>(R.id.failureDesc).text = getString(R.string.failureLogin)
+        failureDone.text = getString(R.string.failureLoginDone)
+        dialogView.findViewById<TextView>(R.id.failureTitle).text = getString(R.string.failureLoginTitle)
+
+
+        val alertDialog = builder.create()
+
+        failureDone.setOnClickListener {
+            alertDialog.dismiss()
+        }
+
+        alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        alertDialog.show()
+    }
+
+    private fun showFailureRequestDialog() {
+        val builder = AlertDialog.Builder(this)
+        val inflater = layoutInflater
+        val dialogView = inflater.inflate(R.layout.failure_dialog, null)
+        builder.setView(dialogView)
+
+        val failureDone = dialogView.findViewById<Button>(R.id.failureDone)
+        dialogView.findViewById<TextView>(R.id.failureDesc).text = getString(R.string.failureRequest)
+        failureDone.text = getString(R.string.failureLoginDone)
+        dialogView.findViewById<TextView>(R.id.failureTitle).text = getString(R.string.failureLoginTitle)
+
+
+        val alertDialog = builder.create()
+
+        failureDone.setOnClickListener {
+            alertDialog.dismiss()
+        }
+
+        alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        alertDialog.show()
+    }
+
 }
