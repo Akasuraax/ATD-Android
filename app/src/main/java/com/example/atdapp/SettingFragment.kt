@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.atdapp.LoginActivity
+import com.example.atdapp.R
 import com.example.atdapp.databinding.FragmentSettingBinding
 import java.util.Locale
 
@@ -27,9 +28,9 @@ class SettingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val settingsList = listOf(
-            SettingItem("Langue") { showLanguageDialog() }, // Ajoutez cette ligne
-            SettingItem("Théme") { showNightModeDialog() }, // Ajoutez cette ligne
-            SettingItem("Déconnexion") { logOut() },
+            SettingItem(getString(R.string.language)) { showLanguageDialog() },
+            SettingItem(getString(R.string.theme)) { showNightModeDialog() },
+            SettingItem(getString(R.string.logout)) { logOut() }
         )
 
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
@@ -44,10 +45,10 @@ class SettingsFragment : Fragment() {
     private fun logOut() {
         val builder = AlertDialog.Builder(context)
 
-        builder.setMessage("Voulez-vous vous déconnecter ?")
-            .setTitle("Déconnexion")
+        builder.setMessage(R.string.logoutConfirm)
+            .setTitle(R.string.logout)
 
-        builder.setPositiveButton("Oui") { dialog, which ->
+        builder.setPositiveButton(R.string.yes) { dialog, which ->
             val sharedPreferences = activity?.getSharedPreferences("MySharedPreferences", Context.MODE_PRIVATE)
             val editor = sharedPreferences?.edit()
 
@@ -55,15 +56,13 @@ class SettingsFragment : Fragment() {
             editor?.remove("userId")
             editor?.remove("lastLogin")
             editor?.apply()
-            Toast.makeText(context, "Vous êtes déconnecté", Toast.LENGTH_SHORT).show()
 
             val intent = Intent(context, LoginActivity::class.java)
             startActivity(intent)
 
             activity?.finish()
         }
-        builder.setNegativeButton("Non") { dialog, which ->
-
+        builder.setNegativeButton(R.string.no) { dialog, which ->
             dialog.dismiss()
         }
 
@@ -71,7 +70,7 @@ class SettingsFragment : Fragment() {
     }
 
     private fun showNightModeDialog() {
-        val modes = arrayOf("Système", "Clair", "Sombre")
+        val modes = arrayOf(getString(R.string.system), getString(R.string.light), getString(R.string.dark))
         val checkedItem = when (AppCompatDelegate.getDefaultNightMode()) {
             AppCompatDelegate.MODE_NIGHT_YES -> 2
             AppCompatDelegate.MODE_NIGHT_NO -> 1
@@ -79,7 +78,7 @@ class SettingsFragment : Fragment() {
         }
 
         AlertDialog.Builder(requireContext())
-            .setTitle("Choisissez un mode")
+            .setTitle(R.string.choose_mode)
             .setSingleChoiceItems(modes, checkedItem) { dialog, which ->
                 when (which) {
                     0 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
@@ -88,12 +87,12 @@ class SettingsFragment : Fragment() {
                 }
                 dialog.dismiss()
             }
-            .setNegativeButton("Annuler", null)
+            .setNegativeButton(R.string.cancel, null)
             .show()
     }
 
     private fun showLanguageDialog() {
-        val languages = arrayOf("Français", "English")
+        val languages = arrayOf(getString(R.string.french), getString(R.string.english))
         val checkedItem = when (Locale.getDefault().language) {
             "fr" -> 0
             "en" -> 1
@@ -101,7 +100,7 @@ class SettingsFragment : Fragment() {
         }
 
         AlertDialog.Builder(requireContext())
-            .setTitle("Choisissez une langue")
+            .setTitle(R.string.choose_language)
             .setSingleChoiceItems(languages, checkedItem) { dialog, which ->
                 when (which) {
                     0 -> setLocale("fr")
@@ -109,7 +108,7 @@ class SettingsFragment : Fragment() {
                 }
                 dialog.dismiss()
             }
-            .setNegativeButton("Annuler", null)
+            .setNegativeButton(R.string.cancel, null)
             .show()
     }
 
@@ -120,10 +119,7 @@ class SettingsFragment : Fragment() {
         val config = resources.configuration
         config.setLocale(locale)
         resources.updateConfiguration(config, resources.displayMetrics)
-
-        // Redémarrer l'activité pour que les changements prennent effet
         activity?.recreate()
     }
-
 
 }
