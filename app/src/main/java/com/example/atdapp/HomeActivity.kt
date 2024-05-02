@@ -7,17 +7,23 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.nfc.NdefMessage
 import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.nfc.tech.Ndef
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
+import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
@@ -143,7 +149,6 @@ class HomeActivity : AppCompatActivity() {
             val ndefMessage = ndef.ndefMessage
             if (ndefMessage != null) {
                 val data = extractDataFromNdefMessage(ndefMessage)
-                Toast.makeText(this, data, Toast.LENGTH_LONG).show()
                 sendDataToServer(data)
             }
         } catch (e: IOException) {
@@ -177,11 +182,19 @@ class HomeActivity : AppCompatActivity() {
             Method.POST, "${Constant.API_BASE_URL}/visit",
             params,
             { response ->
-                Toast.makeText(this, "Merci pour votre visite ", Toast.LENGTH_LONG).show()
+                showSuccessDialog()
             },
             { error ->
-                Toast.makeText(this, error.networkResponse.statusCode.toString(), Toast.LENGTH_LONG).show()
-            }) {
+                if (error.networkResponse!= null) {
+                val statusCode = error.networkResponse.statusCode
+                if (statusCode == 422) {
+                    showFailureVisitDialog()
+                }
+                } else {
+                    showFailureRequestDialog()
+                }
+            }
+        ) {
             override fun getHeaders(): MutableMap<String, String> {
                 val headers = HashMap<String, String>()
                 headers["Authorization"] = "$authToken"
@@ -189,5 +202,57 @@ class HomeActivity : AppCompatActivity() {
             }
         }
         queue.add(jsonObjectRequest)
+    }
+
+    private fun showFailureRequestDialog() {
+        val builder = androidx.appcompat.app.AlertDialog.Builder(this)
+        val inflater = layoutInflater
+        val dialogView = inflater.inflate(R.layout.failure_dialog, null)
+        builder.setView(dialogView)
+        val failureDone = dialogView.findViewById<Button>(R.id.failureDone)
+        dialogView.findViewById<TextView>(R.id.failureDesc).text = getString(R.string.failureRequest)
+        failureDone.text = getString(R.string.failureLoginDone)
+        dialogView.findViewById<TextView>(R.id.failureTitle).text = getString(R.string.failureLoginTitle)
+        val alertDialog = builder.create()
+        failureDone.setOnClickListener {
+            alertDialog.dismiss()
+        }
+        alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        alertDialog.show()
+    }
+
+    private fun showFailureVisitDialog() {
+        val builder = androidx.appcompat.app.AlertDialog.Builder(this)
+        val inflater = layoutInflater
+        val dialogView = inflater.inflate(R.layout.failure_dialog, null)
+        builder.setView(dialogView)
+        val failureDone = dialogView.findViewById<Button>(R.id.failureDone)
+        dialogView.findViewById<TextView>(R.id.failureDesc).text = getString(R.string.failureVisitDesc)
+        failureDone.text = getString(R.string.failureLoginDone)
+        dialogView.findViewById<TextView>(R.id.failureTitle).text = getString(R.string.error)
+        val alertDialog = builder.create()
+        failureDone.setOnClickListener {
+            alertDialog.dismiss()
+        }
+        alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        alertDialog.show()
+    }
+
+    private fun showSuccessDialog() {
+        val builder = androidx.appcompat.app.AlertDialog.Builder(this)
+        val inflater = layoutInflater
+        val dialogView = inflater.inflate(R.layout.sucess_dialog, null)
+        builder.setView(dialogView)
+        val failureDone = dialogView.findViewById<Button>(R.id.successDone)
+        dialogView.findViewById<TextView>(R.id.successDesc).text = getString(R.string.successVisit)
+        failureDone.text = getString(R.string.close)
+        dialogView.findViewById<TextView>(R.id.successTitle).text =
+            getString(R.string.successTitleVisit)
+        val alertDialog = builder.create()
+        failureDone.setOnClickListener {
+            alertDialog.dismiss()
+        }
+        alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        alertDialog.show()
     }
 }
