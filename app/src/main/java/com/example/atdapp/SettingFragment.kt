@@ -82,23 +82,22 @@ class SettingsFragment : Fragment() {
             AppCompatDelegate.MODE_NIGHT_NO -> 1
             else -> 0
         }
-        Log.d("SettingsFragment", "Activité: ${activity?.title}")
 
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.choose_mode)
             .setSingleChoiceItems(modes, checkedItem) { dialog, which ->
                 when (which) {
                     0 -> {
-                        //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
                         saveNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
                     }
                     1 -> {
-                        //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                         saveNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
                     }
                     2 -> {
-                        //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                         saveNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 
                     }
@@ -147,7 +146,7 @@ class SettingsFragment : Fragment() {
         val config = resources.configuration
         config.setLocale(locale)
         resources.updateConfiguration(config, resources.displayMetrics)
-        //activity?.recreate()
+        activity?.recreate()
     }
 
     private fun saveNightMode(mode: Int) {
@@ -164,8 +163,4 @@ class SettingsFragment : Fragment() {
         editor?.apply()
     }
 
-    private fun recreateActivity() {
-        val intent = Intent(activity, HomeActivity::class.java)
-        activity?.recreate()
-    }
 }
