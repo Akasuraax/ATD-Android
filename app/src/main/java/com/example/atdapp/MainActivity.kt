@@ -8,8 +8,10 @@ import android.os.Handler
 import android.os.Looper
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,6 +23,9 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        // Charger les paramètres de langue et de thème
+        loadSettings()
 
         if (isTokenValid(this)) {
             // Le token est valide, l'utilisateur peut accéder à l'application
@@ -42,9 +47,31 @@ class MainActivity : AppCompatActivity() {
                 finish()
             }, 1000) // 1000 millisecondes = 1 secondes
         }
-
-
     }
+
+    private fun loadSettings() {
+        val sharedPreferences = getSharedPreferences("MySharedPreferences", Context.MODE_PRIVATE)
+        val nightMode = sharedPreferences.getInt("nightMode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        val language = sharedPreferences.getString("language", "fr")
+
+        if (nightMode!= AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM) {
+            AppCompatDelegate.setDefaultNightMode(nightMode)
+        }
+
+        if (language!= null) {
+            setLocale(language)
+        }
+    }
+
+    private fun setLocale(languageCode: String) {
+        val locale = Locale(languageCode)
+        Locale.setDefault(locale)
+        val config = resources.configuration
+        config.setLocale(locale)
+        resources.updateConfiguration(config, resources.displayMetrics)
+        recreate() // Redémarre l'activité pour appliquer le changement de langue
+    }
+
 
     fun isTokenValid(context: Context): Boolean {
         val sharedPreferences: SharedPreferences = context.getSharedPreferences("MySharedPreferences", Context.MODE_PRIVATE)
