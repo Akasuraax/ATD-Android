@@ -32,29 +32,5 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var button = view.findViewById<Button>(R.id.button)
-
-        button.setOnClickListener {
-            showSuccessDialog()
-        }
-    }
-
-    private fun showSuccessDialog() {
-
-        val successConstraintLayout = view?.findViewById<ConstraintLayout>(R.id.successConstraintLayout)
-        val inflater = LayoutInflater.from(requireActivity())
-        val dialogView = inflater.inflate(R.layout.sucess_dialog, successConstraintLayout, false)
-        val successDone = dialogView.findViewById<Button>(R.id.successDone)
-
-        val builder = AlertDialog.Builder(requireActivity())
-        builder.setView(dialogView)
-        val alertDialog = builder.create()
-
-        successDone.setOnClickListener {
-            alertDialog.dismiss()
-        }
-
-        alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        alertDialog.show()
     }
 }

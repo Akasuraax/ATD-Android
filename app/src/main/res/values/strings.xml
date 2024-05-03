@@ -40,4 +40,5 @@
     <string name="close">close</string>
     <string name="failureVisitDesc">This person does not need to be visited</string>
     <string name="error">Error</string>
+    <string name="visit">visit</string>
 </resources>

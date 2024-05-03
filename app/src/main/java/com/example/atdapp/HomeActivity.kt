@@ -82,7 +82,7 @@ class HomeActivity : AppCompatActivity() {
         menu.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.home -> replaceFragment(HomeFragment())
-                R.id.profile -> replaceFragment(ProfilFragment())
+                R.id.profile -> replaceFragment(VisitFragment())
                 R.id.setting -> replaceFragment(SettingsFragment())
                 R.id.scanner -> replaceFragment(ScannerFragment())
                 else -> {}
@@ -175,7 +175,6 @@ class HomeActivity : AppCompatActivity() {
         val params = JSONObject()
         params.put("id_volunteer", userId)
         params.put("id_beneficiary", data)
-        Log.d(TAG, "Token: $authToken")
 
         val queue = Volley.newRequestQueue(this)
         val jsonObjectRequest = object : JsonObjectRequest(
@@ -188,6 +187,7 @@ class HomeActivity : AppCompatActivity() {
                 if (error.networkResponse!= null) {
                 val statusCode = error.networkResponse.statusCode
                 if (statusCode == 422) {
+                    Toast.makeText(this,error.networkResponse.statusCode.toString(),Toast.LENGTH_LONG).show()
                     showFailureVisitDialog()
                 }
                 } else {
