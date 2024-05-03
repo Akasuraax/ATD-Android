@@ -24,7 +24,7 @@ class UserAdapter: BaseAdapter {
         return this.listUser.size
     }
 
-    override fun getItem(position: Int): Any {
+    override fun getItem(position: Int): User {
         return this.listUser.get(position)
     }
 

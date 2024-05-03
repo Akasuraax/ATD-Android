@@ -1,7 +1,7 @@
 package com.example.atdapp
 
-import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -15,10 +15,10 @@ import com.android.volley.toolbox.Volley
 import com.example.atdapp.adapter.UserAdapter
 import com.example.atdapp.model.User
 import org.json.JSONArray
-import org.json.JSONObject
 
 
 class VisitFragment : Fragment() {
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +46,7 @@ class VisitFragment : Fragment() {
 
                     var currentjsonobj = users.getJSONObject(cpt)
                     var u = User(
+                        currentjsonobj.getInt("id"),
                         currentjsonobj.getString("name"),
                         currentjsonobj.getString("forname"),
                         currentjsonobj.getBoolean("visit"),
@@ -58,9 +59,17 @@ class VisitFragment : Fragment() {
                 var adp = UserAdapter(this.context, res)
 
                 lv.adapter = adp
+                lv.setOnItemClickListener { parent, adapter, position, id ->
+
+                    var user:User = adp.getItem(position)
+
+                    var i = Intent(this.context,WriteNfcActivity::class.java)
+                    i.putExtra("id",user.id)
+                    startActivity(i)
+                }
             },
             { error ->
-                Toast.makeText(this.context," pas bon", Toast.LENGTH_LONG).show()
+                Toast.makeText(this.context,"pas bon", Toast.LENGTH_LONG).show()
             }
         ) {
             override fun getHeaders(): MutableMap<String, String> {
@@ -70,7 +79,6 @@ class VisitFragment : Fragment() {
             }
         }
         queue.add(requete)
-
         return view
     }
 }
