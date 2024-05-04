@@ -53,4 +53,6 @@ dependencies {
     implementation("com.android.volley:volley:1.2.1")
     implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
     implementation("com.google.zxing:core:3.4.1")
+    implementation("com.onesignal:OneSignal:[5.0.0, 5.99.99]")
+
 }
