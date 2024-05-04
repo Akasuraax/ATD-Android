@@ -140,15 +140,21 @@ class SettingsFragment : Fragment() {
     }
 
     private fun setLocale(languageCode: String) {
-        val locale = Locale(languageCode)
-        Locale.setDefault(locale)
-        val resources = resources
-        val config = resources.configuration
-        config.setLocale(locale)
-        resources.updateConfiguration(config, resources.displayMetrics)
-        activity?.recreate()
+        try {
+            val locale = Locale(languageCode)
+            Locale.setDefault(locale)
+            val resources = resources
+            val config = resources.configuration
+            config.setLocale(locale)
+            resources.updateConfiguration(config, resources.displayMetrics)
+            activity?.finish()
+            val intent = Intent(activity, HomeActivity::class.java)
+            startActivity(intent)
+        } catch (e: Exception) {
+            Log.e("SettingsFragment", "Error setting locale", e)
+            Toast.makeText(context, "Error setting locale", Toast.LENGTH_SHORT).show()
+        }
     }
-
     private fun saveNightMode(mode: Int) {
         val sharedPreferences = activity?.getSharedPreferences("MySharedPreferences", Context.MODE_PRIVATE)
         val editor = sharedPreferences?.edit()
