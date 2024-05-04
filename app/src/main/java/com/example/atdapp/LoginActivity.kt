@@ -21,6 +21,8 @@ import androidx.core.view.WindowInsetsCompat
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import org.json.JSONArray
+import org.json.JSONException
 import org.json.JSONObject
 
 class LoginActivity : AppCompatActivity() {
@@ -55,17 +57,24 @@ class LoginActivity : AppCompatActivity() {
                     val userJson = JSONObject(response.getString("user"))
                     val userId = userJson.getString("id")
 
-                    val sharedPreferences = getSharedPreferences("MySharedPreferences", Context.MODE_PRIVATE)
-                    val editor = sharedPreferences.edit()
-                    editor.putString("auth_token", token)
-                    editor.putString("userId", userId)
-                    editor.putLong("lastLogin", System.currentTimeMillis())
+                    val roles = userJson.getJSONArray("roles")
+
+                    if(checkRole(userJson, 2)) {
+
+                        val sharedPreferences = getSharedPreferences("MySharedPreferences", Context.MODE_PRIVATE)
+                        val editor = sharedPreferences.edit()
+                        editor.putString("auth_token", token)
+                        editor.putString("userId", userId)
+                        editor.putLong("lastLogin", System.currentTimeMillis())
 
 
-                    editor.apply()
+                        editor.apply()
 
-                    val i = Intent(this,HomeActivity::class.java)
-                    startActivity(i)
+                        val i = Intent(this, HomeActivity::class.java)
+                        startActivity(i)
+                    } else {
+                        showFailureLoginDialog()
+                    }
                 },
                 { error ->
                     if (error.networkResponse!= null) {
@@ -79,6 +88,24 @@ class LoginActivity : AppCompatActivity() {
                 }
             )
             queue.add(jsonObjectRequest)
+        }
+    }
+
+    fun checkRole(userJson: JSONObject, targetRole: Int): Boolean {
+        try {
+            val roles = userJson.getJSONArray("roles")
+            for (i in 0 until roles.length()) {
+                val role = roles.getJSONObject(i)
+                val roleId = role.getInt("id")
+                if (roleId == targetRole) {
+                    println("Le rôle $targetRole a été trouvé.")
+                    return true
+                }
+            }
+            return false
+        } catch (e: JSONException) {
+            e.printStackTrace()
+            return false
         }
     }
 
