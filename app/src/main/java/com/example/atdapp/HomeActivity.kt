@@ -15,21 +15,14 @@ import android.nfc.Tag
 import android.nfc.tech.Ndef
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.View
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
-import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.json.JSONObject
@@ -171,7 +164,6 @@ class HomeActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences("MySharedPreferences", Context.MODE_PRIVATE)
         val authToken = sharedPreferences.getString(AUTH_TOKEN_KEY, "")
         val userId = sharedPreferences.getString(USER_ID_KEY, "")
-
         val params = JSONObject()
         params.put("id_volunteer", userId)
         params.put("id_beneficiary", data)
@@ -187,7 +179,6 @@ class HomeActivity : AppCompatActivity() {
                 if (error.networkResponse!= null) {
                 val statusCode = error.networkResponse.statusCode
                 if (statusCode == 422) {
-                    Toast.makeText(this,error.networkResponse.statusCode.toString(),Toast.LENGTH_LONG).show()
                     showFailureVisitDialog()
                 }
                 } else {

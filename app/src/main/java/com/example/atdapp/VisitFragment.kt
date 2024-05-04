@@ -65,6 +65,9 @@ class VisitFragment : Fragment() {
 
                     var i = Intent(this.context,WriteNfcActivity::class.java)
                     i.putExtra("id",user.id)
+                    i.putExtra("name",user.name)
+                    i.putExtra("forname",user.forname)
+
                     startActivity(i)
                 }
             },

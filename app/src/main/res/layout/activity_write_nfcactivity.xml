@@ -7,4 +7,40 @@
     android:layout_height="match_parent"
     tools:context=".WriteNfcActivity">
 
+    <ImageView
+        android:id="@+id/iv_nfc"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/nfc"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.33"
+        app:tint="@color/black" />
+
+    <TextView
+        android:id="@+id/tv_title_nfc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="approcher le jeton NFC"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_nfc"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+        app:layout_constraintVertical_bias="0.1" />
+
+    <TextView
+        android:id="@+id/tv_name_nfc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nom Prénom"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_nfc"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+        app:layout_constraintVertical_bias="0.3" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

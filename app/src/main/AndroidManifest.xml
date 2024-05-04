@@ -28,12 +28,11 @@
             android:name=".WriteNfcActivity"
             android:exported="false" >
             <intent-filter>
-                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="*/*" />
+                <action android:name="android.nfc.action.TECH_DISCOVERED" />
             </intent-filter>
+            <meta-data
+                android:name="android.nfc.action.TECH_DISCOVERED"
+                android:resource="@xml/techlist" />
         </activity>
         <activity
             android:name=".HomeActivity"
