@@ -88,18 +88,13 @@ class SettingsFragment : Fragment() {
             .setSingleChoiceItems(modes, checkedItem) { dialog, which ->
                 when (which) {
                     0 -> {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
                         saveNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
                     }
                     1 -> {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                         saveNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-
                     }
                     2 -> {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                         saveNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-
                     }
                 }
                 dialog.dismiss()
@@ -160,6 +155,9 @@ class SettingsFragment : Fragment() {
         val editor = sharedPreferences?.edit()
         editor?.putInt("nightMode", mode)
         editor?.apply()
+        activity?.finish()
+        val intent = Intent(activity, HomeActivity::class.java)
+        startActivity(intent)
     }
 
     private fun saveLanguage(languageCode: String) {

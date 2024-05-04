@@ -19,6 +19,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
@@ -46,6 +47,10 @@ class HomeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_home)
         setupWindowInsets()
         replaceFragment(HomeFragment())
+
+        val sharedPreferences = getSharedPreferences("MySharedPreferences", Context.MODE_PRIVATE)
+        val nightMode = sharedPreferences.getInt("nightMode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        AppCompatDelegate.setDefaultNightMode(nightMode)
 
         setupNfc()
         setupBottomNavigation()
