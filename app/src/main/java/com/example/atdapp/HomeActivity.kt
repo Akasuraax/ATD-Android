@@ -90,7 +90,7 @@ class HomeActivity : AppCompatActivity() {
         val menu = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         menu.setOnItemSelectedListener {
             when (it.itemId) {
-                R.id.home -> replaceFragment(HomeFragment())
+                R.id.home -> replaceFragment(ActivityListFragment())
                 R.id.profile -> replaceFragment(VisitFragment())
                 R.id.setting -> replaceFragment(SettingsFragment())
                 R.id.scanner -> replaceFragment(ScannerFragment())
