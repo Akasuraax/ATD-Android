@@ -39,7 +39,7 @@ class ActivityListFragment : Fragment() {
         var queue = Volley.newRequestQueue(this.context)
         val requete: StringRequest = object : StringRequest(
             Request.Method.GET,
-            Constant.API_BASE_URL + "/activity/between?startDate=2024-04-04T00:00:00%2B01:00&endDate=2024-04-17T00:00:00%2B01:00",
+            Constant.API_BASE_URL + "/activity/between?startDate=2024-04-28T00:00:00%2B02:00&endDate=2024-06-09T00:00:00%2B02:00",
             { content ->
 
                 var res = mutableListOf<ActivityList>()
