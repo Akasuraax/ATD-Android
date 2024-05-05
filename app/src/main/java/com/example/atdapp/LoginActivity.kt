@@ -79,10 +79,12 @@ class LoginActivity : AppCompatActivity() {
                 { error ->
                     if (error.networkResponse!= null) {
                         val statusCode = error.networkResponse.statusCode
+
                         if (statusCode == 422 || statusCode == 401) {
                             showFailureLoginDialog()
                         }
                     } else {
+                        Log.d("request", error.toString())
                         showFailureRequestDialog()
                     }
                 }

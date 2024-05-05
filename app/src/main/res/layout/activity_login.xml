@@ -62,6 +62,7 @@
             android:layout_height="match_parent"
             android:layout_marginBottom="18dp"
             android:background="@drawable/text_input"
+            android:inputType="textPassword"
             android:padding="8dp"/>
 
         <androidx.appcompat.widget.AppCompatButton
