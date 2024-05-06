@@ -41,6 +41,8 @@
     <string name="failureVisitDesc">This person does not need to be visited</string>
     <string name="error">Error</string>
     <string name="visit">visit</string>
-    <string name="goodWrite">Tout est bon</string>
-    <string name="badWrite">Oups quelque chose c\'est mal passer</string>
+    <string name="goodWrite">Everything is fine</string>
+    <string name="badWrite">Oops, something went wrong</string>
+    <string name="visitTitle">List of people visited</string>
+    <string name="listActivitiesTitle">List of your activities</string>
 </resources>

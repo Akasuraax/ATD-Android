@@ -32,14 +32,13 @@ class ActivityListFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_activity_list, container, false)
 
-        val sharedPreferences =
-            requireActivity().getSharedPreferences("MySharedPreferences", Context.MODE_PRIVATE)
+        val sharedPreferences = requireActivity().getSharedPreferences("MySharedPreferences", Context.MODE_PRIVATE)
         val authToken = sharedPreferences.getString("auth_token", "")
-
+        val userId = sharedPreferences.getString("userId", "")
         var queue = Volley.newRequestQueue(this.context)
         val requete: StringRequest = object : StringRequest(
             Request.Method.GET,
-            Constant.API_BASE_URL + "/activity/between?startDate=2024-04-28T00:00:00%2B02:00&endDate=2024-06-09T00:00:00%2B02:00",
+            Constant.API_BASE_URL + "/activity/withParticipate?userId=${userId}",
             { content ->
 
                 var res = mutableListOf<ActivityList>()
@@ -63,6 +62,16 @@ class ActivityListFragment : Fragment() {
 
                 var lv = view.findViewById<ListView>(R.id.activityList)
                 var adp = ActivityListAdapter(this.context, res)
+
+                lv.setOnItemClickListener { parent, adapter, position, id ->
+
+                    var activity:ActivityList = adp.getItem(position)
+
+                    var i = Intent(this.context,ActivityDetails::class.java)
+
+                    i.putExtra("id", activity.id)
+                    startActivity(i)
+                }
 
                 lv.adapter = adp
             },

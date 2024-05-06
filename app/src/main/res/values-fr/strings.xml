@@ -9,7 +9,7 @@
     <string name="home">Accueil</string>
     <string name="scanner">Scanner</string>
     <string name="scan_result">Résultat du scan</string>
-    <string name="loginError">Email ou mot de passe incorrect !</string>
+    <string name="loginError">Email ou mot de passe incorrect!</string>
     <string name="delete">Supprimer</string>
     <string name="new_scan">Scanner</string>
     <string name="hello_blank_fragment">Bonjour fragment vide</string>
@@ -17,7 +17,7 @@
     <string name="language">Langue</string>
     <string name="theme">Thème</string>
     <string name="logout">Déconnexion</string>
-    <string name="logoutConfirm">Êtes-vous sûr de vouloir vous déconnecter ?</string>
+    <string name="logoutConfirm">Êtes-vous sûr de vouloir vous déconnecter?</string>
     <string name="system">Système</string>
     <string name="light">Clair</string>
     <string name="dark">Sombre</string>
@@ -29,11 +29,11 @@
     <string name="french">français</string>
     <string name="english">Anglais</string>
     <string name="home_title">Bienvenue sur Au Temps Donné</string>
-    <string name="failureLogin">Email ou mot de passe incorrect !</string>
+    <string name="failureLogin">Email ou mot de passe incorrect!</string>
     <string name="failureLoginDone">oupsi</string>
     <string name="failureLoginTitle">Erreur de connexion</string>
     <string name="failureRequest">Une erreur de connexion est survenue</string>
-    <string name="successVisit">Merci pour votre visite !</string>
+    <string name="successVisit">Merci pour votre visite!</string>
     <string name="successTitleVisit">c\'est bon</string>
     <string name="close">fermer</string>
     <string name="failureVisitDesc">Cette personne n\'a pas besoin d\'etre visité</string>
@@ -42,4 +42,6 @@
     <string name="home_text">L’association Au Temps Donné est une association humanitaire, créée en 1987 dans le département de l’Aisne, à Saint Quentin en réponse à la crise industrielle qui frappait la région. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
     <string name="goodWrite">Tout est bon</string>
     <string name="badWrite">Oups quelque chose c\'est mal passer</string>
+    <string name="visitTitle">Liste des personnes a visité</string>
+    <string name="listActivitiesTitle">Liste de vos activités</string>
 </resources>
