@@ -45,4 +45,5 @@
     <string name="badWrite">Oops, something went wrong</string>
     <string name="visitTitle">List of people visited</string>
     <string name="listActivitiesTitle">List of your activities</string>
+    <string name="planning">Activities</string>
 </resources>

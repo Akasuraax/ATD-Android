@@ -44,4 +44,5 @@
     <string name="badWrite">Oups quelque chose c\'est mal passer</string>
     <string name="visitTitle">Liste des personnes a visité</string>
     <string name="listActivitiesTitle">Liste de vos activités</string>
+    <string name="planning">Activités</string>
 </resources>

@@ -57,21 +57,25 @@ class LoginActivity : AppCompatActivity() {
                     val userJson = JSONObject(response.getString("user"))
                     val userId = userJson.getString("id")
 
-                    val roles = userJson.getJSONArray("roles")
+                    if(userJson.getString("status") == "1") {
 
-                    if(checkRole(userJson, 2)) {
+                        if (checkRole(userJson, 2)) {
 
-                        val sharedPreferences = getSharedPreferences("MySharedPreferences", Context.MODE_PRIVATE)
-                        val editor = sharedPreferences.edit()
-                        editor.putString("auth_token", token)
-                        editor.putString("userId", userId)
-                        editor.putLong("lastLogin", System.currentTimeMillis())
+                            val sharedPreferences =
+                                getSharedPreferences("MySharedPreferences", Context.MODE_PRIVATE)
+                            val editor = sharedPreferences.edit()
+                            editor.putString("auth_token", token)
+                            editor.putString("userId", userId)
+                            editor.putLong("lastLogin", System.currentTimeMillis())
 
 
-                        editor.apply()
+                            editor.apply()
 
-                        val i = Intent(this, HomeActivity::class.java)
-                        startActivity(i)
+                            val i = Intent(this, HomeActivity::class.java)
+                            startActivity(i)
+                        } else {
+                            showFailureLoginDialog()
+                        }
                     } else {
                         showFailureLoginDialog()
                     }
