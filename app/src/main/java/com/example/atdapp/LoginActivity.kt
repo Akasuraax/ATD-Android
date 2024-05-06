@@ -31,6 +31,8 @@ class LoginActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_login)
 
+        SSLTrustManager.addCertificatesToTrustStore(this);
+
         val loginButton = findViewById<Button>(R.id.loginButton)
 
         loginButton.setOnClickListener {
@@ -67,7 +69,6 @@ class LoginActivity : AppCompatActivity() {
                             editor.putString("auth_token", token)
                             editor.putString("userId", userId)
                             editor.putLong("lastLogin", System.currentTimeMillis())
-
 
                             editor.apply()
 
