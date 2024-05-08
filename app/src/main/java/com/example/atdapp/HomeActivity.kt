@@ -33,7 +33,7 @@ import java.io.IOException
 
 class HomeActivity : AppCompatActivity() {
 
-    val ONESIGNAL_APP_ID = "44a1d35c-30b5-4420-aad7-7be277d39a68"
+    val ONESIGNAL_APP_ID = "64e09db5-38b1-49e5-aad9-002604e62646"
 
     companion object {
         private const val TAG = "HomeActivity"
