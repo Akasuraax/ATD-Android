@@ -3,11 +3,13 @@ package com.example.atdapp.adapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.example.atdapp.R
 import com.example.atdapp.model.ActivityList
 import com.example.atdapp.model.User
@@ -53,8 +55,13 @@ class ActivityListAdapter: BaseAdapter {
         v.findViewById<TextView>(R.id.tv_startDate).text = current.start
         v.findViewById<TextView>(R.id.tv_endDate).text = current.end
 
-        val colorInt = Color.parseColor(current.color)
-        v.findViewById<View>(R.id.v_barActivity).setBackgroundColor(colorInt)
+        try {
+            val colorInt = Color.parseColor(current.color)
+            v.findViewById<View>(R.id.v_barActivity).setBackgroundColor(colorInt)
+        } catch (e: IllegalArgumentException) {
+            val defaultBlueColor = ContextCompat.getColor(v.context, R.color.blue)
+            v.findViewById<View>(R.id.v_barActivity).setBackgroundColor(defaultBlueColor)
+        }
 
         return v
     }
