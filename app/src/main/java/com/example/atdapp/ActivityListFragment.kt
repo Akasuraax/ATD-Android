@@ -76,7 +76,7 @@ class ActivityListFragment : Fragment() {
                 lv.adapter = adp
             },
             { error ->
-                Toast.makeText(this.context, "pas bon", Toast.LENGTH_LONG).show()
+                Toast.makeText(this.context, "Une erreur est survenue", Toast.LENGTH_LONG).show()
             }
         ) {
             override fun getHeaders(): MutableMap<String, String> {

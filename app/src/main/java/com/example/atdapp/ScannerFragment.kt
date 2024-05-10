@@ -64,7 +64,7 @@ class ScannerFragment : Fragment() {
                     Request.Method.DELETE, deleteUrl,
                     { response ->
                         global = JSONObject(response)
-                        Toast.makeText(this.context,"lot supprimer",Toast.LENGTH_LONG).show()
+                        Toast.makeText(this.context,"Lot supprimé",Toast.LENGTH_LONG).show()
 
                         binding.textResult.text = "Lot supprimer"
                         binding.suppButton.visibility = View.GONE
@@ -97,7 +97,7 @@ class ScannerFragment : Fragment() {
         val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
         if (result != null) {
             if (result.contents == null) {
-                Toast.makeText(activity, "pas trouver", Toast.LENGTH_LONG).show()
+                Toast.makeText(activity, "Élément introuvable", Toast.LENGTH_LONG).show()
             } else {
                 try {
                     global = JSONObject(result.contents)
