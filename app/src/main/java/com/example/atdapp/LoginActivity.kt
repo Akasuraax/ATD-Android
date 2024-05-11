@@ -31,6 +31,8 @@ class LoginActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_login)
 
+        SSLTrustManager.addCertificatesToTrustStore(this);
+
         val loginButton = findViewById<Button>(R.id.loginButton)
 
         loginButton.setOnClickListener {
@@ -39,7 +41,7 @@ class LoginActivity : AppCompatActivity() {
             val password = findViewById<EditText>(R.id.passwordLogin).text.toString()
 
             if(email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(applicationContext, "valeur invalide", Toast.LENGTH_LONG).show()
+                Toast.makeText(applicationContext, "Valeur invalide", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
 
@@ -67,7 +69,6 @@ class LoginActivity : AppCompatActivity() {
                             editor.putString("auth_token", token)
                             editor.putString("userId", userId)
                             editor.putLong("lastLogin", System.currentTimeMillis())
-
 
                             editor.apply()
 
